@@ -1,6 +1,6 @@
 require("dotenv").config();
-const { Client } = require("@notionhq/client");
-const { DateTime } = require("luxon");
+const budgetService = require("./budgetService")();
+const _ = require("lodash");
 
 const notion = new Client({
   auth: process.env.NOTION_API_KEY,
@@ -8,43 +8,21 @@ const notion = new Client({
 
 // Is not actual date but is just for testing purposes
 const actual_date = DateTime.fromISO("2021-09-06");
+const previousMonth = actual_date.minus({ months: 1 });
 
-const start_date = DateTime.fromObject({
-  day: 1,
-  month: actual_date.month,
-  year: actual_date.year,
-});
-
-const end_date = DateTime.fromObject({
-  day: 1,
-  month: actual_date.month + 1,
-  year: actual_date.year,
-});
+const start_date = previousMonth.startOf("month");
+const end_date = previousMonth.endOf("month");
 
 (async () => {
-  const list = await notion.databases.query({
-    database_id: process.env.NDB_EXPENSES,
-    filter: {
-      and: [
-        {
-          property: "Fecha",
-          date: {
-            on_or_after: start_date.toISO(),
-          },
-        },
-        {
-          property: "Fecha",
-          date: {
-            before: end_date.toISO(),
-          },
-        },
-      ],
-    },
-  });
+  const expenses = await budgetService.getSummaryBetween(start_date, end_date);
+  const topFive = await budgetService.getHighestExpensesBetween(
+    start_date,
+    end_date,
+    5
+  );
 
-  const amount = list.results.reduce((total_amount, current) => {
-    return total_amount + current.properties.Cantidad.number;
-  }, 0);
-
-  console.log(`Your total expenses are: ${amount}`);
+  const totalSaved = _.round(
+    parseFloat(process.env.BUDGET_AMOUNT) - expenses.total,
+    2
+  );
 })();

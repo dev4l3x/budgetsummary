@@ -1,6 +1,7 @@
 require("dotenv").config();
 const { DateTime } = require("luxon");
 const budgetService = require("./budgetService")();
+const emailSender = require("./emailSender")();
 
 // Is not actual date but is just for testing purposes
 const actual_date = DateTime.fromISO("2021-09-06");
@@ -31,6 +32,12 @@ const end_previous_week = previous_week.endOf("week");
 
   const totalSaved =
     parseFloat(process.env.BUDGET_AMOUNT) - expensesUntilEndDate.total;
+
+  const result = await emailSender.sendEmail(
+    process.env.DESTINATION_EMAIL,
+    "summary",
+    "<p>test email</p>"
+  );
 
   console.log(JSON.stringify(expensesUntilEndDate));
 })();
