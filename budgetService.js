@@ -50,6 +50,52 @@ module.exports = () => {
     return formattedExpenses;
   };
 
+  service.saveSummaryBetween = async (startDate, endDate) => {
+    const summary = await service.getSummaryBetween(startDate, endDate);
+
+    const properties = {
+      Title: {
+        title: [
+          {
+            type: "text",
+            text: {
+              content: startDate.toFormat("LLLL yyyy"),
+            },
+          },
+        ],
+      },
+      Esenciales: {
+        number: summary.essential,
+      },
+      Prescindibles: {
+        number: summary.noEssential,
+      },
+      Month: {
+        rich_text: [
+          {
+            type: "text",
+            text: {
+              content: startDate.toFormat("LLLL"),
+            },
+          },
+        ],
+      },
+      Year: {
+        number: parseInt(startDate.toFormat("yyyy")),
+      },
+      Salario: {
+        number: parseFloat(process.env.SALARY),
+      },
+    };
+
+    await notion.pages.create({
+      parent: {
+        database_id: process.env.NDB_SUMMARY,
+      },
+      properties,
+    });
+  };
+
   async function _getExpensesBetween(
     startDate,
     endDate,

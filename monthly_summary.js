@@ -37,6 +37,7 @@ const end_date = previousMonth.endOf("month");
 
   const body = generateHtml(templateData);
 
+  await budgetService.saveSummaryBetween(start_date, end_date);
   await emailSender.sendEmail(
     process.env.DESTINATION_EMAIL,
     "Budget monthly summary",
