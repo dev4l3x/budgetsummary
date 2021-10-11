@@ -1,0 +1,17 @@
+html 
+    body
+        h2 Summary of expenses between #{startDate} - #{endDate}
+        p Essential week expenses: #{essential}€
+        p No essential week expenses: #{noEssential}€
+        p Total week expenses: #{totalExpenses}€
+        hr
+        h2 Top #{topExpensesNumber} expenses
+        ol 
+            each val in topExpenses
+                li
+                    p #{val.title} - #{val.amount}€
+        hr
+        h2 Left budget for current month (#{currentMonth})
+        p Expent until end of week: #{expentUntilEnd}€
+        p Budget: #{budget}€
+        p Left Budget: #{leftBudget}€

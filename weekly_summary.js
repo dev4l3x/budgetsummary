@@ -2,6 +2,7 @@ require("dotenv").config();
 const { DateTime } = require("luxon");
 const budgetService = require("./budgetService")();
 const emailSender = require("./emailSender")();
+const pug = require("pug");
 
 // Is not actual date but is just for testing purposes
 const actual_date = DateTime.fromISO("2021-09-06");
@@ -30,13 +31,29 @@ const end_previous_week = previous_week.endOf("week");
     end_previous_week
   );
 
-  const totalSaved =
+  const leftBudget =
     parseFloat(process.env.BUDGET_AMOUNT) - expensesUntilEndDate.total;
+
+  const generateHtml = pug.compileFile("weeklySummaryTemplate.pug");
+
+  const body = generateHtml({
+    startDate: start_previous_week.toFormat("d LLL"),
+    endDate: end_previous_week.toFormat("d LLL"),
+    essential: summary.essential,
+    noEssential: summary.noEssential,
+    totalExpenses: summary.total,
+    topExpensesNumber: topFiveExpenses.length,
+    topExpenses: topFiveExpenses,
+    expentUntilEnd: expensesUntilEndDate.total,
+    budget: process.env.BUDGET_AMOUNT,
+    leftBudget,
+    currentMonth: end_previous_week.toFormat("LLLL"),
+  });
 
   const result = await emailSender.sendEmail(
     process.env.DESTINATION_EMAIL,
-    "summary",
-    "<p>test email</p>"
+    "Budget weekly summary",
+    body
   );
 
   console.log(JSON.stringify(expensesUntilEndDate));
