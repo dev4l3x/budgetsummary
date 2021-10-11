@@ -1,17 +1,17 @@
 html 
     body
         h2 Summary of expenses between #{startDate} - #{endDate}
-        p Essential week expenses: #{essential}€
-        p No essential week expenses: #{noEssential}€
-        p Total week expenses: #{totalExpenses}€
+        p Essential week expenses: #{weeklySummary.essential}#{moneyUnit}
+        p No essential week expenses: #{weeklySummary.noEssential}#{moneyUnit}
+        p Total week expenses: #{weeklySummary.total}#{moneyUnit}
         hr
-        h2 Top #{topExpensesNumber} expenses
+        h2 Top #{topExpenses.length} expenses
         ol 
             each val in topExpenses
                 li
-                    p #{val.title} - #{val.amount}€
+                    p #{val.title} - #{val.amount}#{moneyUnit}
         hr
         h2 Left budget for current month (#{currentMonth})
-        p Expent until end of week: #{expentUntilEnd}€
-        p Budget: #{budget}€
-        p Left Budget: #{leftBudget}€
+        p Expent until end of week: #{expentUntilEnd}#{moneyUnit}
+        p Budget: #{budget}#{moneyUnit}
+        p Left Budget: #{leftBudget}#{moneyUnit}

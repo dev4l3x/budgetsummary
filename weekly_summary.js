@@ -3,9 +3,10 @@ const { DateTime } = require("luxon");
 const budgetService = require("./budgetService")();
 const emailSender = require("./emailSender")();
 const pug = require("pug");
+const _ = require("lodash");
 
 // Is not actual date but is just for testing purposes
-const actual_date = DateTime.fromISO("2021-09-06");
+const actual_date = DateTime.now();
 
 const previous_week = actual_date.minus({ days: 7 });
 
@@ -39,15 +40,13 @@ const end_previous_week = previous_week.endOf("week");
   const body = generateHtml({
     startDate: start_previous_week.toFormat("d LLL"),
     endDate: end_previous_week.toFormat("d LLL"),
-    essential: summary.essential,
-    noEssential: summary.noEssential,
-    totalExpenses: summary.total,
-    topExpensesNumber: topFiveExpenses.length,
+    weeklySummary: summary,
     topExpenses: topFiveExpenses,
     expentUntilEnd: expensesUntilEndDate.total,
     budget: process.env.BUDGET_AMOUNT,
-    leftBudget,
+    leftBudget: _.round(leftBudget, 2),
     currentMonth: end_previous_week.toFormat("LLLL"),
+    moneyUnit: process.env.MONEY_UNIT,
   });
 
   const result = await emailSender.sendEmail(

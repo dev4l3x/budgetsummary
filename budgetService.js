@@ -63,13 +63,13 @@ module.exports = () => {
           {
             property: "Fecha",
             date: {
-              on_or_after: startDate.toISO(),
+              on_or_after: startDate.toISODate(),
             },
           },
           {
             property: "Fecha",
             date: {
-              before: endDate.toISO(),
+              on_or_before: endDate.toISODate(),
             },
           },
           ...additionalFilters,
