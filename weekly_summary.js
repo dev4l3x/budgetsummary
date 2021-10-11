@@ -5,7 +5,6 @@ const emailSender = require("./emailSender")();
 const pug = require("pug");
 const _ = require("lodash");
 
-// Is not actual date but is just for testing purposes
 const actual_date = DateTime.now();
 
 const previous_week = actual_date.minus({ days: 7 });

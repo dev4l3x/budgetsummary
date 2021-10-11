@@ -1,0 +1,17 @@
+html 
+    body
+        h2 Summary of expenses for #{month} 
+        p Essential expenses: #{summary.essential}#{moneyUnit}
+        p No essential expenses: #{summary.noEssential}#{moneyUnit}
+        p Total expenses: #{summary.total}#{moneyUnit}
+        hr
+        h2 Top #{topExpenses.length} expenses
+        ol 
+            each val in topExpenses
+                li
+                    p #{val.title} - #{val.amount}#{moneyUnit}
+        hr
+        h2 Savings
+        p Budget: #{budget}#{moneyUnit}
+        p Expent: #{summary.total}#{moneyUnit}
+        p Total saved: #{total_saved}#{moneyUnit}
