@@ -7,23 +7,19 @@ const notion = new Client({
 });
 
 // Is not actual date but is just for testing purposes
-const actual_month = DateTime.fromISO("2021-09-01");
+const actual_date = DateTime.fromISO("2021-09-06");
 
 const start_date = DateTime.fromObject({
   day: 1,
-  month: actual_month.month,
-  year: actual_month.year,
+  month: actual_date.month,
+  year: actual_date.year,
 });
 
 const end_date = DateTime.fromObject({
   day: 1,
-  month: actual_month.month + 1,
-  year: actual_month.year,
+  month: actual_date.month + 1,
+  year: actual_date.year,
 });
-
-function formatDate(date) {
-  return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-}
 
 (async () => {
   const list = await notion.databases.query({
